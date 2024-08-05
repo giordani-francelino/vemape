@@ -1,0 +1,73 @@
+@page "/tarefas"
+@inject HttpClient Http
+
+<PageTitle>Tarefas</PageTitle>
+
+<h1>Tarefas</h1>
+
+<ul>
+    @foreach (var t in tarefas)
+    {
+        <li>
+            <input type="checkbox" @bind="t.Concluido" />
+            @t.Titulo
+        </li>
+    }
+</ul>
+
+@*<input placeholder="Alguma tarefa" @bind="novaTarefa" />*@
+<input placeholder="Alguma tarefa" id="textTarefa" @bind="novaTarefa" @oninput="ValidarTexto" />
+<button @onclick="AdicionarTarefa">
+    Adicionar</button>
+@*
+@if (string.IsNullOrEmpty(novaTarefa))
+{
+<p style="color: red;">@mensagem</p>
+}
+*@
+<p style="color: red;">@mensagem</p>
+
+
+@code {
+    private List<Item> tarefas = new();
+    private string? novaTarefa;
+
+    //private string? mensagem = "A string não pode ser vazia.";
+    private string? mensagem;
+
+    private void ValidarTexto(ChangeEventArgs e)
+    {
+        mensagem = null;
+        if (string.IsNullOrEmpty(e.Value!.ToString()) || string.IsNullOrWhiteSpace(e.Value.ToString()))
+        {
+            mensagem = "A string não pode ser vazia.";
+        }
+    }
+    private void AdicionarTarefa()
+    {
+        if (!string.IsNullOrWhiteSpace(novaTarefa))
+        {
+            tarefas.Add(new Item { Titulo = novaTarefa });
+            novaTarefa = null;
+            mensagem = null;
+        }//fim if
+        else
+        {
+            mensagem = "A string não pode ser vazia.";
+        }
+    } //fim func
+    public class Item
+    {
+        public string? Titulo
+        {
+
+            get; set;
+        }
+
+        public bool Concluido
+        {
+            get; set;
+        } = false;
+
+    }
+}
